@@ -23,6 +23,18 @@ Outputs: tool_results.json, tool_report.txt
 - Loop continues until `stop_reason="end_turn"`
 - Each iteration adds assistant response + tool results to messages list
 
+## Verification Checklist
+- [x] 3 tool definitions accepted by Claude (compute_properties, check_lipinski, tanimoto_similarity)
+- [x] Claude autonomously chose which tools to call (7 calls across 3 compounds)
+- [x] Tool-use loop terminates correctly on `stop_reason="end_turn"`
+- [x] All tool results are valid JSON with correct RDKit outputs
+- [x] Final synthesis response references all tool results
+
+## Risks (resolved)
+- Infinite loop risk if Claude never returns end_turn — mitigated by `max_turns=10` cap
+- Claude may call tools with invalid SMILES — RDKit gracefully returns error dict
+- Token cost grows per loop iteration (context accumulates) — manageable for 3 compounds
+
 ## Results
 | Metric | Value |
 |--------|-------|
